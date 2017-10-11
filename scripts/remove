@@ -1,0 +1,75 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
+app=$YNH_APP_INSTANCE_NAME
+
+ssh_user=$(ynh_app_setting_get $app ssh_user)
+final_path=$(ynh_app_setting_get $app final_path)
+
+#=================================================
+# SPECIFIC REMOVE
+#=================================================
+# SOURCE THE LIBRARIES
+#=================================================
+
+# Load functions ssh_chroot_xxx
+source "$final_path/ssh_chroot/ssh_chroot.sh"
+# Load functions quotas_xxx
+source "$final_path/unix_quotas/unix_quotas.sh"
+
+#=================================================
+# REMOVE QUOTAS OPTIONS IN FSTAB
+#=================================================
+
+user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
+
+quotas_find_mount_point "$user_dir"
+quotas_clean_fstab "$quotas_mount_point"
+
+# Activate quotas
+quotas_deactivate "$quotas_mount_point"
+
+#=================================================
+# REMOVE SSH CHROOT CONFIG
+#=================================================
+
+sed -i "/# Automatically added for the user $ssh_user/d" /etc/ssh/sshd_config
+
+# Reload ssh service
+systemctl reload ssh
+
+#=================================================
+# STANDARD REMOVE
+#=================================================
+# REMOVE APP MAIN DIR
+#=================================================
+
+# Remove the app directory securely
+ynh_secure_remove "$final_path"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# REMOVE DEDICATED USER
+#=================================================
+
+# Delete a system user
+ynh_system_user_delete $ssh_user
+
+#=================================================
+# DISCLAIMER
+#=================================================
+
+WARNING echo -e "\nThe directory /home/yunohost.app/ssh_chroot_directories has been not removed."

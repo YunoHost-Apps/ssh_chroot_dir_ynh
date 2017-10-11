@@ -1,0 +1,6 @@
+SOURCE_URL=https://github.com/maniackcrudelis/unix_quotas/archive/v0.2.tar.gz
+SOURCE_SUM=f81abb8cccf31fe74a669f8585e3d79b
+SOURCE_SUM_PRG=md5sum
+SOURCE_FORMAT=tar.gz
+SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=

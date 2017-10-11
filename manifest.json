@@ -1,0 +1,75 @@
+{
+	"name": "ssh chroot directory",
+	"id": "ssh_chroot_dir",
+	"packaging_format": 1,
+	"description": {
+		"en": "ssh chroot directories with quotas disk.",
+		"fr": "Dossier ssh en chroot avec gestion de quotas."
+	},
+	"version": "1.0",
+	"url": "https://github.com/maniackcrudelis/ssh_chroot",
+	"license": "GPL-3.0",
+	"maintainer": {
+		"name": "Maniack Crudelis",
+		"email": "maniackc_dev@crudelis.fr"
+	},
+	"requirements": {
+		"yunohost": ">= 2.7.2"
+	},
+	"multi_instance": true,
+	"services": [],
+	"arguments": {
+		"install" : [
+			{
+				"name": "ssh_user",
+				"ask": {
+					"en": "Choose an new user for this directory",
+					"fr": "Choisissez un nouvel utilisateur pour ce dossier"
+				},
+				"help": {
+					"en": "It must be a new user, it will be created for this purpose.",
+					"fr": "Ce doit être un nouvel utilisateur, il sera créé pour cet usage."
+				},
+				"example": "johndoe"
+			},
+			{
+				"name": "password",
+				"type": "password",
+				"ask": {
+					"en": "Set a password for this user",
+					"fr": "Définissez un mot de passe pour cet utilisateur"
+				},
+				"help": {
+					"en": "OPTIONAL. It's better to use a public ssh key instead. See below.",
+					"fr": "OPTIONNEL. Il est préférable d'utiliser une clé publique. Voir ci-dessous."
+				},
+				"example": "Choose a password",
+				"optional": true
+			},
+			{
+				"name": "pub_key",
+				"ask": {
+					"en": "Give the public ssh key",
+					"fr": "Donnez une clé publique ssh"
+				},
+				"help": {
+					"en": "OPTIONAL. You can use a password instead, but a ssh public key is more secure. Ask to your beneficiary for his public key.",
+					"fr": "OPTIONNEL. Vous pouvez utiliser un mot de passe à la place, mais une clé ssh publique est plus sécurisée. Demandez à votre bénéficiaire sa clé publique."
+				},
+				"optional": true
+			},
+			{
+				"name": "size",
+				"ask": {
+					"en": "Choose the maximum space allowed to this user",
+					"fr": "Choississez l'espace maximum à allouer à cet utilisateur"
+				},
+				"help": {
+					"en": "Default Ko, Use M, G or T to specified another unit.",
+					"fr": "Ko par défaut, utilisez M, G ou T pour indiquer une autre unité."
+				},
+				"default": "10G"
+			}
+		]
+	}
+}

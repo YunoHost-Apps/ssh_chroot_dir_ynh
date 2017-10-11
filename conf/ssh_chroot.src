@@ -1,0 +1,6 @@
+SOURCE_URL=https://github.com/maniackcrudelis/ssh_chroot/archive/v0.1.tar.gz
+SOURCE_SUM=0454fbcffc42b0c2c692ac3696929666
+SOURCE_SUM_PRG=md5sum
+SOURCE_FORMAT=tar.gz
+SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=

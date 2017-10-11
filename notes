@@ -1,0 +1,45 @@
+sudo df -h
+	= 19G, 9G dispo
+
+Il faut
+	- ajouter une option à fstab (chiant ça...)
+		On peut trouver un mount point par `mount | grep " / "`
+		,usrquota
+		,usrjquota=aquota.user,jqfmt=vfsv0	Pour utiliser journaled quota
+		Je voudrais bien tester sur un mount bind ! Je crois qu'il ne veux vraiment pas...
+			/home/testuser  /home/testuser2  none    bind,default,auto,usrjquota=aquota.user,jqfmt=vfsv0
+		sudo mount -o remount /
+		sudo mount -o remount /home/testuser2
+	- Ajouter le module au kernel
+		sudo modprobe quota_v2
+		echo 'quota_v2' | sudo tee -a /etc/modules
+	- Installer les outils de gestion
+		sudo apt-get install quota quotatool
+
+	- Activer les quotas
+		`sudo quotacheck -vaum`
+			--verbose --all --group --user --no-remount
+		`sudo quotaon /`
+
+sudo adduser testuser
+
+	- On applique un quota à un user.
+		`sudo quotatool -v -u testuser -bq 200M -l '250 Mb' /`
+
+	- Voir l'état du quota
+		 sudo repquota -us /
+
+	OK ÇA MARCHE !
+
+
+	Par contre, j'ai des problèmes avec mon chroot.... Juste que mon dossier était pas détenu par root...
+	Bon pour le moment, pas de sftp avec dolphin. On verra plus tard.
+
+
+-----
+
+BRIDER EXEC ?
+https://github.com/YunoHost-Apps/my_webapp_ynh/blob/master/scripts/remove#L30
+Gérer Allow user...
+ldd
+Bon j'arrive pas à me connecter depuis dolphin, je sais pas trop pourquoi...

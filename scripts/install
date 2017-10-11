@@ -1,0 +1,186 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+ssh_user=$YNH_APP_ARG_SSH_USER
+# Default value null
+password=${YNH_APP_ARG_PASSWORD:-}
+pub_key=${YNH_APP_ARG_PUB_KEY:-}
+size=$YNH_APP_ARG_SIZE
+
+app=$YNH_APP_INSTANCE_NAME
+
+#=================================================
+# DISCLAIMER
+#=================================================
+
+if IS_PACKAGE_CHECK; then
+	WARNING echo "This app can't be tested by package check. Please see the readme for more information. https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
+fi
+
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
+
+# Correct user name
+# An unix user name can contains only :alnum: and . - _
+# Replace all other characters by _
+ssh_user=${ssh_user//[^[:alnum:].\-_]/_}
+
+ynh_system_user_exists $ssh_user && ynh_die "This user already exist"
+
+final_path=/opt/yunohost/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
+
+if test -z "$password" && test -z "$pub_key"
+then
+	ynh_die "You can't left empty both password and public key. Please fill at least one of them."
+fi
+
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
+
+ynh_app_setting_set $app ssh_user $ssh_user
+ynh_app_setting_set $app size $size
+
+#=================================================
+# STANDARD MODIFICATIONS
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+ynh_app_setting_set $app final_path $final_path
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path/ssh_chroot" ssh_chroot
+ynh_setup_source "$final_path/unix_quotas" unix_quotas
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+# SOURCE THE LIBRARIES
+#=================================================
+
+# Load functions ssh_chroot_xxx
+source "$final_path/ssh_chroot/ssh_chroot.sh"
+# Load functions quotas_xxx
+source "$final_path/unix_quotas/unix_quotas.sh"
+
+#=================================================
+# CREATE THE DIRECTORY FOR THIS USER
+#=================================================
+
+user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
+mkdir -p "$user_dir"
+
+#=================================================
+# INSTALL QUOTAS SYSTEM
+#=================================================
+
+quotas_install
+
+#=================================================
+# CONFIGURE FSTAB TO SUPPORT QUOTAS
+#=================================================
+
+# Set fstab
+quotas_find_mount_point "$user_dir"
+quotas_set_fstab "$quotas_mount_point"
+
+# Activate quotas
+quotas_activate "$quotas_mount_point"
+
+#=================================================
+# CREATE THE USER
+#=================================================
+
+useradd -d "/data" --system --user-group $ssh_user --shell /bin/bash
+# The home directory for this user is /data, relative to its chroot directory, $user_dir
+
+#=================================================
+# ADD A PASSWORD FOR THIS USER
+#=================================================
+
+if [ -n "$password" ]
+then
+	echo $ssh_user:$password | chpasswd
+fi
+
+#=================================================
+# ADD THE SSH PUBLIC KEY
+#=================================================
+
+if [ -n "$pub_key" ]
+then
+	ynh_app_setting_set $app pub_key $pub_key
+	mkdir -p "$user_dir/.ssh"
+	# Secure the ssh key
+	echo -n "no-port-forwarding,no-X11-forwarding,no-agent-forwarding " >> "$user_dir/.ssh/authorized_keys"
+	# Then add the key
+	echo "$pub_key" >> "$user_dir/.ssh/authorized_keys"
+fi
+
+#=================================================
+# SET THE QUOTA FOR THIS USER
+#=================================================
+
+quotas_set_for_user $ssh_user $user_dir $size
+
+#=================================================
+# SET THE CHROOT DIRECTORY
+#=================================================
+
+# Build the chroot
+ssh_chroot_set_directory "$user_dir"
+
+# Copy some binaries in the chroot
+ssh_chroot_standard_binaries "$user_dir"
+ssh_chroot_copy_binary rsync "$user_dir"
+
+# Set permissions
+ssh_chroot_set_permissions "$user_dir" $ssh_user
+
+# Set the chroot in the ssh config
+ssh_chroot_add_chroot_config "$user_dir" $ssh_user
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions to app files
+chown -R root: $final_path
+
+#=================================================
+# DISCLAIMER
+#=================================================
+
+# Get the main domain
+domain=$(yunohost domain list | grep -m1 "-" | awk '{print $2}')
+ssh_port=$(grep "^Port " /etc/ssh/sshd_config | awk '{print $2}')
+
+WARNING echo -e "\nTo use this directory, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'"
+
+if grep --quiet "^AllowUsers" /etc/ssh/sshd_config
+then
+	WARNING echo -e "\nBe carreful, your ssh configuration contains an AllowUsers option. You should probably add the user $ssh_user to this line."
+fi

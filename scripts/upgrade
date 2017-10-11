@@ -1,0 +1,72 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
+app=$YNH_APP_INSTANCE_NAME
+
+ssh_user=$(ynh_app_setting_get $app ssh_user)
+final_path=$(ynh_app_setting_get $app final_path)
+
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path/ssh_chroot" ssh_chroot
+ynh_setup_source "$final_path/unix_quotas" unix_quotas
+
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# SOURCE THE LIBRARIES
+#=================================================
+
+# Load functions ssh_chroot_xxx
+source "$final_path/ssh_chroot/ssh_chroot.sh"
+# Load functions quotas_xxx
+source "$final_path/unix_quotas/unix_quotas.sh"
+
+#=================================================
+# UPDATE THE CHROOT DIRECTORY
+#=================================================
+
+user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
+
+# Build the chroot
+ssh_chroot_set_directory "$user_dir"
+
+# Copy some binaries in the chroot
+ssh_chroot_standard_binaries "$user_dir"
+ssh_chroot_copy_binary rsync "$user_dir"
+
+# Set permissions
+ssh_chroot_set_permissions "$user_dir" $ssh_user
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set right permissions for curl installation
+chown -R root: $final_path
