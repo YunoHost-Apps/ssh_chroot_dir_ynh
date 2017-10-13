@@ -43,8 +43,6 @@ ynh_setup_source "$final_path/unix_quotas" unix_quotas
 
 # Load functions ssh_chroot_xxx
 source "$final_path/ssh_chroot/ssh_chroot.sh"
-# Load functions quotas_xxx
-source "$final_path/unix_quotas/unix_quotas.sh"
 
 #=================================================
 # UPDATE THE CHROOT DIRECTORY
@@ -61,6 +59,12 @@ ssh_chroot_copy_binary rsync "$user_dir"
 
 # Set permissions
 ssh_chroot_set_permissions "$user_dir" $ssh_user
+
+#=================================================
+# UPDATE THE LINK TO CHROOT_MANAGER
+#=================================================
+
+ln -s $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
 # GENERIC FINALIZATION

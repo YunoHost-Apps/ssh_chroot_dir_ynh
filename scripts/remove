@@ -24,8 +24,6 @@ final_path=$(ynh_app_setting_get $app final_path)
 # SOURCE THE LIBRARIES
 #=================================================
 
-# Load functions ssh_chroot_xxx
-source "$final_path/ssh_chroot/ssh_chroot.sh"
 # Load functions quotas_xxx
 source "$final_path/unix_quotas/unix_quotas.sh"
 
@@ -38,17 +36,14 @@ user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
 quotas_find_mount_point "$user_dir"
 quotas_clean_fstab "$quotas_mount_point"
 
-# Activate quotas
+# Deactivate quotas
 quotas_deactivate "$quotas_mount_point"
 
 #=================================================
-# REMOVE SSH CHROOT CONFIG
+# REMOVE THE USER WITH CHROOT_MANAGER
 #=================================================
 
-sed -i "/# Automatically added for the user $ssh_user/d" /etc/ssh/sshd_config
-
-# Reload ssh service
-systemctl reload ssh
+$final_path/chroot_manager.sh deluser --name $ssh_user
 
 #=================================================
 # STANDARD REMOVE
@@ -58,15 +53,6 @@ systemctl reload ssh
 
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# REMOVE DEDICATED USER
-#=================================================
-
-# Delete a system user
-ynh_system_user_delete $ssh_user
 
 #=================================================
 # DISCLAIMER

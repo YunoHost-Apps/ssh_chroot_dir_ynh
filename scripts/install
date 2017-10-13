@@ -70,8 +70,7 @@ ynh_app_setting_set $app size $size
 
 ynh_app_setting_set $app final_path $final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path/ssh_chroot" ssh_chroot
-ynh_setup_source "$final_path/unix_quotas" unix_quotas
+ynh_setup_source "$final_path"
 
 #=================================================
 # SPECIFIC SETUP
@@ -79,8 +78,6 @@ ynh_setup_source "$final_path/unix_quotas" unix_quotas
 # SOURCE THE LIBRARIES
 #=================================================
 
-# Load functions ssh_chroot_xxx
-source "$final_path/ssh_chroot/ssh_chroot.sh"
 # Load functions quotas_xxx
 source "$final_path/unix_quotas/unix_quotas.sh"
 
@@ -109,57 +106,29 @@ quotas_set_fstab "$quotas_mount_point"
 quotas_activate "$quotas_mount_point"
 
 #=================================================
-# CREATE THE USER
+# CREATE THE USER WITH CHROOT_MANAGER
 #=================================================
 
-useradd -d "/data" --system --user-group $ssh_user --shell /bin/bash
-# The home directory for this user is /data, relative to its chroot directory, $user_dir
-
-#=================================================
-# ADD A PASSWORD FOR THIS USER
-#=================================================
-
+add_password=""
 if [ -n "$password" ]
 then
-	echo $ssh_user:$password | chpasswd
+	add_password="--password \"$password\""
 fi
 
-#=================================================
-# ADD THE SSH PUBLIC KEY
-#=================================================
-
+add_sshkey=""
 if [ -n "$pub_key" ]
 then
 	ynh_app_setting_set $app pub_key $pub_key
-	mkdir -p "$user_dir/.ssh"
-	# Secure the ssh key
-	echo -n "no-port-forwarding,no-X11-forwarding,no-agent-forwarding " >> "$user_dir/.ssh/authorized_keys"
-	# Then add the key
-	echo "$pub_key" >> "$user_dir/.ssh/authorized_keys"
+	add_sshkey="--sshkey \"$pub_key\""
 fi
 
-#=================================================
-# SET THE QUOTA FOR THIS USER
-#=================================================
-
-quotas_set_for_user $ssh_user $user_dir $size
+$final_path/chroot_manager.sh adduser --name $ssh_user $add_password $add_sshkey --directory "$user_dir" --quota $size
 
 #=================================================
-# SET THE CHROOT DIRECTORY
+# ADD A LINK TO CHROOT_MANAGER
 #=================================================
 
-# Build the chroot
-ssh_chroot_set_directory "$user_dir"
-
-# Copy some binaries in the chroot
-ssh_chroot_standard_binaries "$user_dir"
-ssh_chroot_copy_binary rsync "$user_dir"
-
-# Set permissions
-ssh_chroot_set_permissions "$user_dir" $ssh_user
-
-# Set the chroot in the ssh config
-ssh_chroot_add_chroot_config "$user_dir" $ssh_user
+ln -s $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
 # GENERIC FINALIZATION
