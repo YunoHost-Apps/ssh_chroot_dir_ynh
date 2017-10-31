@@ -112,23 +112,25 @@ quotas_activate "$quotas_mount_point"
 add_password=""
 if [ -n "$password" ]
 then
-	add_password="--password \"$password\""
+	auth_opt="--password"
+	auth_value="$password"
 fi
 
 add_sshkey=""
 if [ -n "$pub_key" ]
 then
 	ynh_app_setting_set $app pub_key $pub_key
-	add_sshkey="--sshkey \"$pub_key\""
+	auth_opt="--sshkey"
+	auth_value="$pub_key"
 fi
 
-$final_path/chroot_manager.sh adduser --name $ssh_user $add_password $add_sshkey --directory "$user_dir" --quota $size
+$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
 
 #=================================================
 # ADD A LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -s $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
 # GENERIC FINALIZATION
