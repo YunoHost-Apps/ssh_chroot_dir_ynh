@@ -6,7 +6,7 @@
 		"en": "ssh chroot directories with quotas disk.",
 		"fr": "Dossier ssh en chroot avec gestion de quotas."
 	},
-	"version": "1.1",
+	"version": "1.1~ynh1",
 	"url": "https://github.com/maniackcrudelis/ssh_chroot",
 	"license": "GPL-3.0",
 	"maintainer": {

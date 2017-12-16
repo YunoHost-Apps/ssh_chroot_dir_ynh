@@ -26,6 +26,12 @@ ssh_user=$(ynh_app_setting_get $app ssh_user)
 final_path=$(ynh_app_setting_get $app final_path)
 
 #=================================================
+# CHECK VERSION
+#=================================================
+
+ynh_abort_if_up_to_date
+
+#=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE

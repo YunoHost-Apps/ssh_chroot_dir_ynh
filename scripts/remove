@@ -58,4 +58,5 @@ ynh_secure_remove "$final_path"
 # DISCLAIMER
 #=================================================
 
-WARNING echo -e "\nThe directory /home/yunohost.app/ssh_chroot_directories has been not removed."
+ynh_print_info "
+The directory /home/yunohost.app/ssh_chroot_directories has been not removed." >&2

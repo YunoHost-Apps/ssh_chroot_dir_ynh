@@ -33,7 +33,7 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 
 if IS_PACKAGE_CHECK; then
-	WARNING echo "This app can't be tested by package check. Please see the readme for more information. https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
+	ynh_print_warn "This app can't be tested by package check. Please see the readme for more information. https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
 fi
 
 #=================================================
@@ -149,9 +149,21 @@ chown -R root: $final_path
 domain=$(yunohost domain list | grep -m1 "-" | awk '{print $2}')
 ssh_port=$(grep "^Port " /etc/ssh/sshd_config | awk '{print $2}')
 
-WARNING echo -e "\nTo use this directory, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'"
+ynh_print_info "
+To use this directory, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'" >&2
 
 if grep --quiet "^AllowUsers" /etc/ssh/sshd_config
 then
-	WARNING echo -e "\nBe carreful, your ssh configuration contains an AllowUsers option. You should probably add the user $ssh_user to this line."
+	ynh_print_warn "
+Be carreful, your ssh configuration contains an AllowUsers option. You should probably add the user $ssh_user to this line."
 fi
+
+#=================================================
+# SEND A README FOR THE ADMIN
+#=================================================
+
+message="A new chrooted directory has been created. To use it, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'
+
+If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
+
+ynh_send_readme_to_admin "$message" "root"
