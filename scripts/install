@@ -22,7 +22,7 @@ ynh_abort_if_errors
 
 ssh_user=$YNH_APP_ARG_SSH_USER
 # Default value null
-password=${YNH_APP_ARG_PASSWORD:-}
+ynh_print_OFF; password=${YNH_APP_ARG_PASSWORD:-}; ynh_print_ON
 pub_key=${YNH_APP_ARG_PUB_KEY:-}
 size=$YNH_APP_ARG_SIZE
 
@@ -32,7 +32,8 @@ app=$YNH_APP_INSTANCE_NAME
 # DISCLAIMER
 #=================================================
 
-if IS_PACKAGE_CHECK; then
+PACKAGE_CHECK_EXEC=${PACKAGE_CHECK_EXEC:-0}
+if [ "$PACKAGE_CHECK_EXEC" != "0" ]; then
 	ynh_print_warn "This app can't be tested by package check. Please see the readme for more information. https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
 fi
 
@@ -50,10 +51,12 @@ ynh_system_user_exists $ssh_user && ynh_die "This user already exist"
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
+ynh_print_OFF
 if test -z "$password" && test -z "$pub_key"
 then
 	ynh_die "You can't left empty both password and public key. Please fill at least one of them."
 fi
+ynh_print_ON
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
@@ -110,11 +113,13 @@ quotas_activate "$quotas_mount_point"
 #=================================================
 
 add_password=""
+ynh_print_OFF
 if [ -n "$password" ]
 then
 	auth_opt="--password"
 	auth_value="$password"
 fi
+ynh_print_ON
 
 add_sshkey=""
 if [ -n "$pub_key" ]
@@ -124,7 +129,9 @@ then
 	auth_value="$pub_key"
 fi
 
+ynh_print_OFF
 $final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
+ynh_print_ON
 
 #=================================================
 # ADD A LINK TO CHROOT_MANAGER
