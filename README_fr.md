@@ -20,7 +20,7 @@ En plus du chroot, l'utilisateur dispose d'un espace limité.
 
 Ainsi, vous pouvez fournir à un utilisateur distant une partie limitée de votre disque dur pour lui permettre de mettre sa sauvegarde, sans aucun risque pour votre propre serveur.
 
-**Version embarquée:** 1.1
+**Version embarquée:** 1.2
 
 ## Captures d'écran
 
