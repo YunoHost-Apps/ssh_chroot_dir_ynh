@@ -36,7 +36,8 @@ Only by installing this app for each user.
 
 #### Supported architectures
 
-* Tested on x86_64
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)/)
+* ARMv8-A - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/)
 
 ## Limitations
 
