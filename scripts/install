@@ -95,12 +95,14 @@ mkdir -p "$user_dir"
 # INSTALL QUOTAS SYSTEM
 #=================================================
 
+# https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 quotas_install
 
 #=================================================
 # CONFIGURE FSTAB TO SUPPORT QUOTAS
 #=================================================
 
+# https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
 quotas_find_mount_point "$user_dir"
 quotas_set_fstab "$quotas_mount_point"
@@ -173,4 +175,4 @@ message="A new chrooted directory has been created. To use it, connect to 'ssh $
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
 
-ynh_send_readme_to_admin "$message" "root"
+ynh_send_readme_to_admin --app_message="$message" --recipients="root"
