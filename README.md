@@ -1,6 +1,6 @@
 # Chroot ssh directory for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20%28Community%29/lastBuild/consoleFull)  
+[![Integration level](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir)  
 [![Install ssh chroot directory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=ssh_chroot_dir)  
 > **This app can't be tested automatically. Because it's impossible to use modprobe in a lxc container, and there's no fstab to tweak.  
 So, the tests fail each time...  
@@ -22,6 +22,10 @@ So, you can provide to a distant user a limited part of your hard disk to let hi
 
 ## Screenshots
 
+## Demo
+
+No demo available.
+
 ## Configuration
 
 ## Documentation
@@ -37,7 +41,8 @@ Only by installing this app for each user.
 #### Supported architectures
 
 * x86-64b - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)/)
-* ARMv8-A - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps-arm.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/ssh_chroot_dir%20(Community)/badge/icon)](https://ci-stretch.nohost.me/jenkins/job/ssh_chroot_dir%20(Community)/)
 
 ## Limitations
 

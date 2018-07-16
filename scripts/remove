@@ -33,6 +33,7 @@ source "$final_path/unix_quotas/unix_quotas.sh"
 
 user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
 
+# https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 quotas_find_mount_point "$user_dir"
 quotas_clean_fstab "$quotas_mount_point"
 
