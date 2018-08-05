@@ -73,7 +73,7 @@ ssh_chroot_set_permissions "$user_dir" $ssh_user
 # UPDATE THE LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -s $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
 # GENERIC FINALIZATION
