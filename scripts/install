@@ -21,7 +21,7 @@ ynh_abort_if_errors
 #=================================================
 
 ssh_user=$YNH_APP_ARG_SSH_USER
-# Default value null
+# Default value is null
 ynh_print_OFF; password=${YNH_APP_ARG_PASSWORD:-}; ynh_print_ON
 pub_key=${YNH_APP_ARG_PUB_KEY:-}
 size=$YNH_APP_ARG_SIZE
@@ -78,14 +78,14 @@ ynh_setup_source "$final_path"
 #=================================================
 # SPECIFIC SETUP
 #=================================================
-# SOURCE THE LIBRARIES
+# SOURCE LIBRARIES
 #=================================================
 
 # Load functions quotas_xxx
 source "$final_path/unix_quotas/unix_quotas.sh"
 
 #=================================================
-# CREATE THE DIRECTORY FOR THIS USER
+# CREATE DIRECTORY FOR THIS USER
 #=================================================
 
 user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
@@ -173,6 +173,6 @@ fi
 
 message="A new chrooted directory has been created. To use it, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'
 
-If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
+If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
 
 ynh_send_readme_to_admin --app_message="$message" --recipients="root"

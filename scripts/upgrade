@@ -46,7 +46,7 @@ fi
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# SOURCE THE LIBRARIES
+# SOURCE LIBRARIES
 #=================================================
 
 # Load functions ssh_chroot_xxx
@@ -81,5 +81,5 @@ ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/c
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Set right permissions for curl installation
+# Set permissions to app files
 chown -R root: $final_path

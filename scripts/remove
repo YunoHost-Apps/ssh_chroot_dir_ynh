@@ -21,7 +21,7 @@ final_path=$(ynh_app_setting_get $app final_path)
 #=================================================
 # SPECIFIC REMOVE
 #=================================================
-# SOURCE THE LIBRARIES
+# SOURCE LIBRARIES
 #=================================================
 
 # Load functions quotas_xxx
@@ -60,4 +60,4 @@ ynh_secure_remove "$final_path"
 #=================================================
 
 ynh_print_info "
-The directory /home/yunohost.app/ssh_chroot_directories has been not removed." >&2
+The directory /home/yunohost.app/ssh_chroot_directories hasn't been removed." >&2
