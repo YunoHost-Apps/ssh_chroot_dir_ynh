@@ -6,7 +6,7 @@
 		"en": "ssh chroot directories with quotas disk.",
 		"fr": "Dossier ssh en chroot avec gestion de quotas."
 	},
-	"version": "1.2~ynh2",
+	"version": "1.2~ynh3",
 	"url": "https://github.com/maniackcrudelis/ssh_chroot",
 	"license": "GPL-3.0",
 	"maintainer": {
@@ -14,7 +14,7 @@
 		"email": "maniackc_dev@crudelis.fr"
 	},
 	"requirements": {
-		"yunohost": ">= 2.7.14"
+		"yunohost": ">= 3.3.3"
 	},
 	"multi_instance": true,
 	"services": [],

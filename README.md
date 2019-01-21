@@ -40,9 +40,9 @@ Only by installing this app for each user.
 
 #### Supported architectures
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps-arm.yunohost.org/jenkins/job/ssh_chroot_dir%20(Community)%20(%7EARM%7E)/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/ssh_chroot_dir%20(Community)/badge/icon)](https://ci-stretch.nohost.me/jenkins/job/ssh_chroot_dir%20(Community)/)
+* x86-64b - [![](https://ci-apps.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/)
+* ARMv8-A - [![](https://ci-apps-arm.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ssh_chroot_dir/)
+* Jessie x86-64b - [![](https://ci-stretch.nohost.me/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-stretch.nohost.me/ci/apps/ssh_chroot_dir/)
 
 ## Limitations
 
