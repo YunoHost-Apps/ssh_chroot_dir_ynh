@@ -88,6 +88,22 @@ ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/c
 chown -R root: $final_path
 
 #=================================================
+# SEND A README FOR THE ADMIN
+#=================================================
+
+# Build the changelog
+ynh_app_changelog || true
+
+echo "If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh__URL_TAG3__.
+
+---
+
+Changelog since your last upgrade:
+$(cat changelog)" > mail_to_send
+
+ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type="upgrade"
+
+#=================================================
 # END OF SCRIPT
 #=================================================
 
