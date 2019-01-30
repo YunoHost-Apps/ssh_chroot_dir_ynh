@@ -19,6 +19,7 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -39,6 +40,7 @@ upgrade_type=$(ynh_check_app_version_changed)
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
+	ynh_script_progression --message="Download, check and unpack source" --weight=2
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source "$final_path"
 fi
@@ -55,6 +57,7 @@ source "$final_path/ssh_chroot/ssh_chroot.sh"
 #=================================================
 # UPDATE THE CHROOT DIRECTORY
 #=================================================
+ynh_script_progression --message="Update the chroot directory" --weight=3
 
 user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
 
@@ -83,3 +86,9 @@ ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/c
 
 # Set permissions to app files
 chown -R root: $final_path
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade completed" --last

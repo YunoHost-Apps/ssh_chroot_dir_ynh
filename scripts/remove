@@ -12,6 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -30,6 +31,7 @@ source "$final_path/unix_quotas/unix_quotas.sh"
 #=================================================
 # REMOVE QUOTAS OPTIONS IN FSTAB
 #=================================================
+ynh_script_progression --message="Remove quotas options in fstab" --weight=3
 
 user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
 
@@ -43,6 +45,7 @@ quotas_deactivate "$quotas_mount_point"
 #=================================================
 # REMOVE THE USER WITH CHROOT_MANAGER
 #=================================================
+ynh_script_progression --message="Remove the user with Chroot_manager" --weight=3
 
 $final_path/chroot_manager.sh deluser --name $ssh_user
 
@@ -51,6 +54,7 @@ $final_path/chroot_manager.sh deluser --name $ssh_user
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
+ynh_script_progression --message="Remove app main directory"
 
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
@@ -60,4 +64,4 @@ ynh_secure_remove "$final_path"
 #=================================================
 
 ynh_print_info "
-The directory /home/yunohost.app/ssh_chroot_directories hasn't been removed." >&2
+The directory /home/yunohost.app/ssh_chroot_directories hasn't been removed."
