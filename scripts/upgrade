@@ -70,7 +70,10 @@ ssh_chroot_standard_binaries "$user_dir"
 ssh_chroot_copy_binary rsync "$user_dir"
 
 # Set permissions
-ssh_chroot_set_permissions "$user_dir" $ssh_user
+if ! IS_PACKAGE_CHECK
+then
+	ssh_chroot_set_permissions "$user_dir" $ssh_user
+fi
 
 #=================================================
 # UPDATE THE LINK TO CHROOT_MANAGER

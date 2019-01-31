@@ -36,18 +36,23 @@ ynh_script_progression --message="Remove quotas options in fstab" --weight=3
 user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
-quotas_find_mount_point "$user_dir"
-quotas_clean_fstab "$quotas_mount_point"
+if ! IS_PACKAGE_CHECK
+then
+	quotas_find_mount_point "$user_dir"
+	quotas_clean_fstab "$quotas_mount_point"
 
-# Deactivate quotas
-quotas_deactivate "$quotas_mount_point"
+	# Deactivate quotas
+	quotas_deactivate "$quotas_mount_point"
+fi
 
 #=================================================
 # REMOVE THE USER WITH CHROOT_MANAGER
 #=================================================
 ynh_script_progression --message="Remove the user with Chroot_manager" --weight=3
 
-$final_path/chroot_manager.sh deluser --name $ssh_user
+if ! IS_PACKAGE_CHECK; then
+	$final_path/chroot_manager.sh deluser --name $ssh_user
+fi
 
 #=================================================
 # STANDARD REMOVE

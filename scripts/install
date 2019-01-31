@@ -33,8 +33,7 @@ app=$YNH_APP_INSTANCE_NAME
 # DISCLAIMER
 #=================================================
 
-PACKAGE_CHECK_EXEC=${PACKAGE_CHECK_EXEC:-0}
-if [ "$PACKAGE_CHECK_EXEC" != "0" ]; then
+if IS_PACKAGE_CHECK; then
 	ynh_print_warn "This app can't be tested by package check. Please see the readme for more information. https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
 fi
 
@@ -101,7 +100,9 @@ mkdir -p "$user_dir"
 ynh_script_progression --message="Install quotas system" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
-quotas_install
+if ! IS_PACKAGE_CHECK; then
+	quotas_install
+fi
 
 #=================================================
 # CONFIGURE FSTAB TO SUPPORT QUOTAS
@@ -110,11 +111,14 @@ ynh_script_progression --message="Configure fstab to support quotas" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
-quotas_find_mount_point "$user_dir"
-quotas_set_fstab "$quotas_mount_point"
+if ! IS_PACKAGE_CHECK
+then
+	quotas_find_mount_point "$user_dir"
+	quotas_set_fstab "$quotas_mount_point"
 
-# Activate quotas
-quotas_activate "$quotas_mount_point"
+	# Activate quotas
+	quotas_activate "$quotas_mount_point"
+fi
 
 #=================================================
 # CREATE THE USER WITH CHROOT_MANAGER
@@ -139,7 +143,10 @@ then
 fi
 
 ynh_print_OFF
-$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
+if ! IS_PACKAGE_CHECK
+then
+	$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
+fi
 ynh_print_ON
 
 #=================================================
