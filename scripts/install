@@ -19,6 +19,7 @@ ynh_abort_if_errors
 #=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
+ynh_script_progression --message="Retrieve arguments from the manifest" --weight=2
 
 ssh_user=$YNH_APP_ARG_SSH_USER
 # Default value is null
@@ -32,14 +33,14 @@ app=$YNH_APP_INSTANCE_NAME
 # DISCLAIMER
 #=================================================
 
-PACKAGE_CHECK_EXEC=${PACKAGE_CHECK_EXEC:-0}
-if [ "$PACKAGE_CHECK_EXEC" != "0" ]; then
+if IS_PACKAGE_CHECK; then
 	ynh_print_warn "This app can't be tested by package check. Please see the readme for more information. https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
 fi
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
+ynh_script_progression --message="Check if the app can be installed" --weight=2
 
 # Correct user name
 # An unix user name can contains only :alnum: and . - _
@@ -61,6 +62,7 @@ ynh_print_ON
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
+ynh_script_progression --message="Store settings from manifest"
 
 ynh_app_setting_set $app ssh_user $ssh_user
 ynh_app_setting_set $app size $size
@@ -70,6 +72,7 @@ ynh_app_setting_set $app size $size
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Download, check and unpack source" --weight=2
 
 ynh_app_setting_set $app final_path $final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -94,25 +97,33 @@ mkdir -p "$user_dir"
 #=================================================
 # INSTALL QUOTAS SYSTEM
 #=================================================
+ynh_script_progression --message="Install quotas system" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
-quotas_install
+if ! IS_PACKAGE_CHECK; then
+	quotas_install
+fi
 
 #=================================================
 # CONFIGURE FSTAB TO SUPPORT QUOTAS
 #=================================================
+ynh_script_progression --message="Configure fstab to support quotas" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
-quotas_find_mount_point "$user_dir"
-quotas_set_fstab "$quotas_mount_point"
+if ! IS_PACKAGE_CHECK
+then
+	quotas_find_mount_point "$user_dir"
+	quotas_set_fstab "$quotas_mount_point"
 
-# Activate quotas
-quotas_activate "$quotas_mount_point"
+	# Activate quotas
+	quotas_activate "$quotas_mount_point"
+fi
 
 #=================================================
 # CREATE THE USER WITH CHROOT_MANAGER
 #=================================================
+ynh_script_progression --message="Create the user with Chroot_manager" --weight=5
 
 add_password=""
 ynh_print_OFF
@@ -132,7 +143,10 @@ then
 fi
 
 ynh_print_OFF
-$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
+if ! IS_PACKAGE_CHECK
+then
+	$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
+fi
 ynh_print_ON
 
 #=================================================
@@ -171,8 +185,14 @@ fi
 # SEND A README FOR THE ADMIN
 #=================================================
 
-message="A new chrooted directory has been created. To use it, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'
+echo "A new chrooted directory has been created. To use it, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a terminal or by using an sftp connection with 'sftp://$ssh_user@$domain:$ssh_port/data'
 
-If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh"
+If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh__URL_TAG3__." > mail_to_send
 
-ynh_send_readme_to_admin --app_message="$message" --recipients="root"
+ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Installation completed" --last
