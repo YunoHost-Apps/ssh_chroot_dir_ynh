@@ -27,7 +27,12 @@ CHECK_SIZE () {	# Vérifie avant chaque backup que l'espace est suffisant
 #=================================================
 
 IS_PACKAGE_CHECK () {
-	return $(env | grep -c container=lxc)
+	if [ ${PACKAGE_CHECK_EXEC:-0} -eq 1 ]
+	then
+		return 0
+	else
+		return 1
+	fi
 }
 
 #=================================================
