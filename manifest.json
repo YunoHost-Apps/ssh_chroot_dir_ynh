@@ -10,7 +10,7 @@
 	"url": "https://github.com/maniackcrudelis/ssh_chroot",
 	"license": "GPL-3.0",
 	"maintainer": {
-		"name": "None...",
+		"name": "",
 		"email": ""
 	},
 	"previous_maintainers": [{
@@ -18,7 +18,7 @@
 		"email": "maniackc_dev@crudelis.fr"
 	}],
 	"requirements": {
-		"yunohost": ">= 3.4"
+		"yunohost": ">= 3.8.1"
 	},
 	"multi_instance": true,
 	"services": [],

@@ -40,9 +40,8 @@ Only by installing this app for each user.
 
 #### Supported architectures
 
-* x86-64b - [![](https://ci-apps.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/)
+* x86-64 - [![](https://ci-apps.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/)
 * ARMv8-A - [![](https://ci-apps-arm.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ssh_chroot_dir/)
-* Jessie x86-64b - [![](https://ci-stretch.nohost.me/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-stretch.nohost.me/ci/apps/ssh_chroot_dir/)
 
 ## Limitations
 
