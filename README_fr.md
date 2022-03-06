@@ -1,59 +1,44 @@
-# Chroot ssh directory pour YunoHost
+# ssh chroot directory pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir)  
-[![Installer ssh chroot directory avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=ssh_chroot_dir)  
-> **Cette application ne peut pas être testée automatiquement. Parce qu'il est impossible d'utiliser modprobe dans un conteneur lxc, et qu'il n' y a pas de fstab à modifier.  
-Donc, les tests échouent à chaque fois...  
-Le niveau est fixé à 3 par des tests manuels.**
+[![Niveau d'intégration](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)  
+[![Installer ssh chroot directory avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ssh_chroot_dir)
 
 *[Read this readme in english.](./README.md)*
+*[Lire ce readme en français.](./README_fr.md)*
 
-> *Ce package vous permet de créer un répertoire avoir un chroot ssh rapidement et simplement sur un serveur YunoHost.  
-Si vous n'avez pas YunoHost, merci de regarder [ici](https://yunohost.org/#/install_fr) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d'installer ssh chroot directory rapidement et simplement sur un serveur YunoHost.
+Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
 
-## Résumé
+## Vue d'ensemble
 
-Cette application crée un répertoire pour un utilisateur, pour lui permettre de mettre ici ses sauvegardes (ou ce qu'il veut).  
-Ce répertoire est accessible par ssh ou sftp.  
-Le répertoire est hautement sécurisé par un chroot complet avec des commandes disponibles limitées. Ainsi, l'utilisateur ne peut pas sortir de son répertoire et ne peut utiliser aucune commandes qui ne soit pas autorisée.  
-En plus du chroot, l'utilisateur dispose d'un espace limité.
+This app create a directory for an user, to allow him to put in here his backups (or whatever he want).  
+This directory is accessible by ssh or sftp.  
+The directory is highly secured by a complete chroot with limited commands available. So the user can't go out of his directory and can't use any other command which not allowed.  
+In addition to the chroot, the user has a limited space available.
 
-Ainsi, vous pouvez fournir à un utilisateur distant une partie limitée de votre disque dur pour lui permettre de mettre sa sauvegarde, sans aucun risque pour votre propre serveur.
+So, you can provide to a distant user a limited part of your hard disk to let him put his backup, without any risk for your own server.
 
-**Version embarquée:** 1.2
 
-## Captures d'écran
+**Version incluse :** 1.2~ynh4
 
-## Démo
 
-Aucune démo pour cette application.
 
-## Configuration
+## Documentations et ressources
 
-## Documentation
+* Site officiel de l'app : https://github.com/maniackcrudelis/ssh_chroot
+* Dépôt de code officiel de l'app : https://github.com/maniackcrudelis/ssh_chroot
+* Documentation YunoHost pour cette app : https://yunohost.org/app_ssh_chroot_dir
+* Signaler un bug : https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/issues
 
- * Documentation YunoHost: Il n'y a pas d'autre documentation, n'hésitez pas à contribuer.
+## Informations pour les développeurs
 
-## Fonctionnalités spécifiques à YunoHost
+Merci de faire vos pull request sur la [branche testing](https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/tree/testing).
 
-#### Support multi-utilisateurs
+Pour essayer la branche testing, procédez comme suit.
+```
+sudo yunohost app install https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/tree/testing --debug
+ou
+sudo yunohost app upgrade ssh_chroot_dir -u https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/tree/testing --debug
+```
 
-Seulement en installant cette application pour chaque utilisateur.
-
-#### Architectures supportées.
-
-* x86-64 - [![](https://ci-apps.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/)
-* ARMv8-A - [![](https://ci-apps-arm.yunohost.org/ci/logs/ssh_chroot_dir%20%28Community%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ssh_chroot_dir/)
-
-## Limitations
-
-* Pas de script de backup et restore.
-* Ne peut pas être testé avec package check.
-
-## Informations additionnelles
-
-## Liens
-
- * Reporter un bug: https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/issues
- * Site de ssh_chroot: https://github.com/maniackcrudelis/ssh_chroot
- * Site de YunoHost: https://yunohost.org/
+**Plus d'infos sur le packaging d'applications :** https://yunohost.org/packaging_apps
