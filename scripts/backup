@@ -28,6 +28,7 @@ ynh_print_info --message="Loading installation settings..."
 app=$YNH_APP_INSTANCE_NAME
 
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+ssh_user=$(ynh_app_setting_get --app=$app --key=ssh_user)
 
 #=================================================
 # DECLARE DATA AND CONF FILES TO BACKUP
