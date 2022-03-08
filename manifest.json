@@ -8,6 +8,11 @@
 	},
 	"version": "1.2~ynh4",
 	"url": "https://github.com/maniackcrudelis/ssh_chroot",
+    "upstream": {
+        "license": "GPL-3.0",
+        "website": "https://github.com/maniackcrudelis/ssh_chroot",
+        "code": "https://github.com/maniackcrudelis/ssh_chroot"
+    },
 	"license": "GPL-3.0",
 	"maintainer": {
 		"name": "",
@@ -18,14 +23,16 @@
 		"email": "maniackc_dev@crudelis.fr"
 	}],
 	"requirements": {
-		"yunohost": ">= 3.8.1"
+        "yunohost": ">= 4.3.0"
 	},
 	"multi_instance": true,
-	"services": [],
+	"services": [
+    ],
 	"arguments": {
 		"install" : [
 			{
 				"name": "ssh_user",
+                "type": "string",
 				"ask": {
 					"en": "Choose an new user for this directory",
 					"fr": "Choisissez un nouvel utilisateur pour ce dossier"
@@ -39,19 +46,15 @@
 			{
 				"name": "password",
 				"type": "password",
-				"ask": {
-					"en": "Set a password for this user",
-					"fr": "Définissez un mot de passe pour cet utilisateur"
-				},
 				"help": {
 					"en": "OPTIONAL. It's better to use a public ssh key instead. See below.",
 					"fr": "OPTIONNEL. Il est préférable d'utiliser une clé publique. Voir ci-dessous."
 				},
-				"example": "Choose a password",
 				"optional": true
 			},
 			{
 				"name": "pub_key",
+                "type": "string",
 				"ask": {
 					"en": "Give the public ssh key",
 					"fr": "Donnez une clé publique ssh"
@@ -64,6 +67,7 @@
 			},
 			{
 				"name": "size",
+                "type": "string",
 				"ask": {
 					"en": "Choose the maximum space allowed to this user",
 					"fr": "Choississez l'espace maximum à allouer à cet utilisateur"

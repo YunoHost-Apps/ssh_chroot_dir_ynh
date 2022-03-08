@@ -12,12 +12,12 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Load settings"
+ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
-ssh_user=$(ynh_app_setting_get $app ssh_user)
-final_path=$(ynh_app_setting_get $app final_path)
+ssh_user=$(ynh_app_setting_get --app=$app --key=ssh_user)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
 # SPECIFIC REMOVE
@@ -55,8 +55,6 @@ if ! IS_PACKAGE_CHECK; then
 fi
 
 #=================================================
-# STANDARD REMOVE
-#=================================================
 # REMOVE APP MAIN DIR
 #=================================================
 ynh_script_progression --message="Remove app main directory"
@@ -64,6 +62,8 @@ ynh_script_progression --message="Remove app main directory"
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
 
+#=================================================
+# GENERIC FINALIZATION
 #=================================================
 # DISCLAIMER
 #=================================================
