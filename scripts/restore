@@ -117,6 +117,13 @@ fi
 ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions to app files
+chown -R root: $final_path
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # END OF SCRIPT
