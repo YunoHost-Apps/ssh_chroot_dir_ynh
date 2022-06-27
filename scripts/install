@@ -143,6 +143,9 @@ then
 fi
 ynh_print_ON
 
+# Allow the user to use ssh
+adduser $ssh_user ssh.app
+
 #=================================================
 # ADD A LINK TO CHROOT_MANAGER
 #=================================================

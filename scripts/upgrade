@@ -85,6 +85,9 @@ then
 	ssh_chroot_set_permissions "$user_dir" $ssh_user
 fi
 
+# Allow the user to use ssh
+adduser $ssh_user ssh.app
+
 #=================================================
 # UPDATE THE LINK TO CHROOT_MANAGER
 #=================================================
