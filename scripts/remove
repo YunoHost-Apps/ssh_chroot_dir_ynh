@@ -12,7 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..."
+ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -57,7 +57,7 @@ fi
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Remove app main directory"
+ynh_script_progression --message="Remove app main directory" --weight=1
 
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
@@ -68,5 +68,10 @@ ynh_secure_remove "$final_path"
 # DISCLAIMER
 #=================================================
 
-ynh_print_info "
-The directory /home/yunohost.app/ssh_chroot_directories hasn't been removed."
+ynh_print_info --message="The directory /home/yunohost.app/ssh_chroot_directories hasn't been removed."
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Removal of $app completed" --last
