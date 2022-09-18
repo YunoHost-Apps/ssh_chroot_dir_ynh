@@ -134,10 +134,10 @@ fi
 if ! IS_PACKAGE_CHECK
 then
 	$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
-fi
 
-# Allow the user to use ssh
-adduser $ssh_user ssh.app
+	# Allow the user to use ssh
+	adduser $ssh_user ssh.app
+fi
 
 #=================================================
 # ADD A LINK TO CHROOT_MANAGER

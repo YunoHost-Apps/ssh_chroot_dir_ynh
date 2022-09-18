@@ -108,6 +108,9 @@ ssh_chroot_copy_binary rsync "$user_dir"
 if ! IS_PACKAGE_CHECK
 then
 	ssh_chroot_set_permissions "$user_dir" $ssh_user
+
+	# Allow the user to use ssh
+	adduser $ssh_user ssh.app
 fi
 
 #=================================================
