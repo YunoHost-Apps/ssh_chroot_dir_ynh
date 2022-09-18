@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 ynh_clean_setup () {
-	ynh_clean_check_starting
+	true
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
@@ -22,10 +22,9 @@ ynh_abort_if_errors
 #=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
-ynh_script_progression --message="Retrieve arguments from the manifest" --weight=2
 
 ssh_user=$YNH_APP_ARG_SSH_USER
-ynh_print_OFF; password=${YNH_APP_ARG_PASSWORD:-}; ynh_print_ON
+password=${YNH_APP_ARG_PASSWORD:-}
 pub_key=${YNH_APP_ARG_PUB_KEY:-}
 size=$YNH_APP_ARG_SIZE
 
@@ -46,17 +45,15 @@ ynh_system_user_exists $ssh_user && ynh_die "This user already exist"
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
-ynh_print_OFF
 if test -z "$password" && test -z "$pub_key"
 then
 	ynh_die "You can't left empty both password and public key. Please fill at least one of them."
 fi
-ynh_print_ON
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Storing installation settings..."
+ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=ssh_user --value=$ssh_user
 ynh_app_setting_set --app=$app --key=size --value=$size
@@ -66,7 +63,7 @@ ynh_app_setting_set --app=$app --key=size --value=$size
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..."
+ynh_script_progression --message="Setting up source files..." --weight=1
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -120,13 +117,11 @@ fi
 ynh_script_progression --message="Create the user with Chroot_manager" --weight=5
 
 add_password=""
-ynh_print_OFF
 if [ -n "$password" ]
 then
 	auth_opt="--password"
 	auth_value="$password"
 fi
-ynh_print_ON
 
 add_sshkey=""
 if [ -n "$pub_key" ]
@@ -136,12 +131,10 @@ then
 	auth_value="$pub_key"
 fi
 
-ynh_print_OFF
 if ! IS_PACKAGE_CHECK
 then
 	$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
 fi
-ynh_print_ON
 
 #=================================================
 # ADD A LINK TO CHROOT_MANAGER
@@ -189,4 +182,4 @@ ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root"
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation completed" --last
+ynh_script_progression --message="Installation of $app completed" --last
