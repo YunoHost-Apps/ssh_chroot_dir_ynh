@@ -23,11 +23,9 @@ In addition to the chroot, the user has a limited space available.
 So, you can provide to a distant user a limited part of your hard disk to let him put his backup, without any risk for your own server.
 
 
-**Shipped version:** 1.3~ynh1
-
+**Shipped version:** 1.3~ynh2
 ## Documentation and resources
 
-* Official app website: <https://github.com/maniackcrudelis/ssh_chroot>
 * Upstream app code repository: <https://github.com/maniackcrudelis/ssh_chroot>
 * YunoHost documentation for this app: <https://yunohost.org/app_ssh_chroot_dir>
 * Report a bug: <https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/issues>
