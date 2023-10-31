@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # ssh chroot directory for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![Working status](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![Working status](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
+
 [![Install ssh chroot directory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ssh_chroot_dir)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -27,7 +28,7 @@ So, you can provide to a distant user a limited part of your hard disk to let hi
 ## Documentation and resources
 
 * Upstream app code repository: <https://github.com/maniackcrudelis/ssh_chroot>
-* YunoHost documentation for this app: <https://yunohost.org/app_ssh_chroot_dir>
+* YunoHost Store: <https://apps.yunohost.org/app/ssh_chroot_dir>
 * Report a bug: <https://github.com/YunoHost-Apps/ssh_chroot_dir_ynh/issues>
 
 ## Developer info
