@@ -10,23 +10,13 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-ssh_user=$(ynh_app_setting_get --app=$app --key=ssh_user)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
 # SPECIFIC REMOVE
 #=================================================
 # SOURCE LIBRARIES
 #=================================================
 
 # Load functions quotas_xxx
-source "$final_path/unix_quotas/unix_quotas.sh"
+source "$install_dir/unix_quotas/unix_quotas.sh"
 
 #=================================================
 # REMOVE QUOTAS OPTIONS IN FSTAB
@@ -36,13 +26,12 @@ ynh_script_progression --message="Remove quotas options in fstab" --weight=3
 user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
-if ! IS_PACKAGE_CHECK
-then
-	quotas_find_mount_point "$user_dir"
-	quotas_clean_fstab "$quotas_mount_point"
+if ! IS_PACKAGE_CHECK; then
+    quotas_find_mount_point "$user_dir"
+    quotas_clean_fstab "$quotas_mount_point"
 
-	# Deactivate quotas
-	quotas_deactivate "$quotas_mount_point"
+    # Deactivate quotas
+    quotas_deactivate "$quotas_mount_point"
 fi
 
 #=================================================
@@ -51,16 +40,8 @@ fi
 ynh_script_progression --message="Remove the user with Chroot_manager" --weight=3
 
 if ! IS_PACKAGE_CHECK; then
-	$final_path/chroot_manager.sh deluser --name $ssh_user
+    "$install_dir/chroot_manager.sh" deluser --name $ssh_user
 fi
-
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-ynh_script_progression --message="Remove app main directory" --weight=1
-
-# Remove the app directory securely
-ynh_secure_remove "$final_path"
 
 #=================================================
 # GENERIC FINALIZATION
