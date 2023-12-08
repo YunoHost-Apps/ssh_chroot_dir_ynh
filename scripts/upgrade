@@ -10,35 +10,11 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-ssh_user=$(ynh_app_setting_get --app=$app --key=ssh_user)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
 # CHECK VERSION
 #=================================================
 ynh_script_progression --message="Checking version..." --weight=1
 
 upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -51,7 +27,7 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=1
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
+	ynh_setup_source --dest_dir="$install_dir"
 fi
 
 #=================================================
@@ -61,7 +37,7 @@ fi
 #=================================================
 
 # Load functions ssh_chroot_xxx
-source "$final_path/ssh_chroot/ssh_chroot.sh"
+source "$install_dir/ssh_chroot/ssh_chroot.sh"
 
 #=================================================
 # UPDATE THE CHROOT DIRECTORY
@@ -91,10 +67,10 @@ fi
 # UPDATE THE LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf $install_dir/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 # Set permissions to app files
-chown -R root: $final_path
+chown -R root: $install_dir
 
 #=================================================
 # GENERIC FINALIZATION
@@ -103,7 +79,7 @@ chown -R root: $final_path
 #=================================================
 
 # Set permissions to app files
-chown -R root: $final_path
+chown -R root: $install_dir
 
 #=================================================
 # SEND A README FOR THE ADMIN

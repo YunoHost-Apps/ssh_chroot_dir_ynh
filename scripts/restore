@@ -11,41 +11,13 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-ynh_clean_setup () {
-	true
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-ssh_user=$(ynh_app_setting_get --app=$app --key=ssh_user)
-
-#=================================================
-# CHECK IF THE APP CAN BE RESTORED
-#=================================================
-ynh_script_progression --message="Validating restoration parameters..." --weight=1
-
-test ! -d $final_path \
-	|| ynh_die --message="There is already a directory: $final_path "
-
-#=================================================
 # STANDARD RESTORATION STEPS
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
 ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
-ynh_restore_file --origin_path="$final_path"
+ynh_restore_file --origin_path="$install_dir"
 
 #=================================================
 # RESTORE THE DATA DIRECTORY
@@ -61,7 +33,7 @@ ynh_restore_file --origin_path="/home/yunohost.app/ssh_chroot_directories/$ssh_u
 #=================================================
 
 # Load functions ssh_chroot_xxx
-source "$final_path/ssh_chroot/ssh_chroot.sh"
+source "$install_dir/ssh_chroot/ssh_chroot.sh"
 
 #=================================================
 # INSTALL QUOTAS SYSTEM
@@ -70,7 +42,7 @@ ynh_script_progression --message="Install quotas system" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
-	quotas_install
+    quotas_install
 fi
 
 #=================================================
@@ -80,13 +52,12 @@ ynh_script_progression --message="Configure fstab to support quotas" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
-if ! IS_PACKAGE_CHECK
-then
-	quotas_find_mount_point "$user_dir"
-	quotas_set_fstab "$quotas_mount_point"
+if ! IS_PACKAGE_CHECK; then
+    quotas_find_mount_point "$user_dir"
+    quotas_set_fstab "$quotas_mount_point"
 
-	# Activate quotas
-	quotas_activate "$quotas_mount_point"
+    # Activate quotas
+    quotas_activate "$quotas_mount_point"
 fi
 
 #=================================================
@@ -105,26 +76,25 @@ ssh_chroot_standard_binaries "$user_dir"
 ssh_chroot_copy_binary rsync "$user_dir"
 
 # Set permissions
-if ! IS_PACKAGE_CHECK
-then
-	ssh_chroot_set_permissions "$user_dir" $ssh_user
+if ! IS_PACKAGE_CHECK; then
+    ssh_chroot_set_permissions "$user_dir" $ssh_user
 
-	# Allow the user to use ssh
-	adduser $ssh_user ssh.app
+    # Allow the user to use ssh
+    adduser $ssh_user ssh.app
 fi
 
 #=================================================
 # UPDATE THE LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf $install_dir/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions to app files
-chown -R root: $final_path
+chown -R root: $install_dir
 
 #=================================================
 # GENERIC FINALIZATION

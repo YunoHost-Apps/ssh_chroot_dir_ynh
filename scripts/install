@@ -10,27 +10,6 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-ynh_clean_setup () {
-	true
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-ssh_user=$YNH_APP_ARG_SSH_USER
-password=${YNH_APP_ARG_PASSWORD:-}
-pub_key=${YNH_APP_ARG_PUB_KEY:-}
-size=$YNH_APP_ARG_SIZE
-
-app=$YNH_APP_INSTANCE_NAME
-
-#=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
 ynh_script_progression --message="Validating installation parameters..." --weight=2
@@ -39,24 +18,15 @@ ynh_script_progression --message="Validating installation parameters..." --weigh
 # An unix user name can contains only :alnum: and . - _
 # Replace all other characters by _
 ssh_user=${ssh_user//[^[:alnum:].\-_]/_}
+ynh_app_setting_set --app="$app" --key=ssh_user --value="$ssh_user"
 
-ynh_system_user_exists $ssh_user && ynh_die "This user already exist"
-
-final_path=/opt/yunohost/$app
-test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
-
-if test -z "$password" && test -z "$pub_key"
-then
-	ynh_die "You can't left empty both password and public key. Please fill at least one of them."
+if ynh_system_user_exists "$ssh_user"; then
+    ynh_die "This user already exist!"
 fi
 
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-ynh_script_progression --message="Storing installation settings..." --weight=1
-
-ynh_app_setting_set --app=$app --key=ssh_user --value=$ssh_user
-ynh_app_setting_set --app=$app --key=size --value=$size
+if test -z "$password" && test -z "$pub_key"; then
+    ynh_die "You can't left empty both password and public key. Please fill at least one of them."
+fi
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -65,9 +35,7 @@ ynh_app_setting_set --app=$app --key=size --value=$size
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=1
 
-ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$final_path"
+ynh_setup_source --dest_dir="$install_dir"
 
 #=================================================
 # SPECIFIC SETUP
@@ -76,14 +44,13 @@ ynh_setup_source --dest_dir="$final_path"
 #=================================================
 
 # Load functions quotas_xxx
-source "$final_path/unix_quotas/unix_quotas.sh"
+source "$install_dir/unix_quotas/unix_quotas.sh"
 
 #=================================================
 # CREATE DIRECTORY FOR THIS USER
 #=================================================
 
-user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
-mkdir -p "$user_dir"
+mkdir "$data_dir/$ssh_user"
 
 #=================================================
 # INSTALL QUOTAS SYSTEM
@@ -92,7 +59,7 @@ ynh_script_progression --message="Install quotas system" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
-	quotas_install
+    quotas_install
 fi
 
 #=================================================
@@ -102,13 +69,12 @@ ynh_script_progression --message="Configure fstab to support quotas" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
-if ! IS_PACKAGE_CHECK
-then
-	quotas_find_mount_point "$user_dir"
-	quotas_set_fstab "$quotas_mount_point"
+if ! IS_PACKAGE_CHECK; then
+    quotas_find_mount_point "$user_dir"
+    quotas_set_fstab "$quotas_mount_point"
 
-	# Activate quotas
-	quotas_activate "$quotas_mount_point"
+    # Activate quotas
+    quotas_activate "$quotas_mount_point"
 fi
 
 #=================================================
@@ -116,34 +82,26 @@ fi
 #=================================================
 ynh_script_progression --message="Create the user with Chroot_manager" --weight=5
 
-add_password=""
-if [ -n "$password" ]
-then
-	auth_opt="--password"
-	auth_value="$password"
+chroot_manager_args=()
+
+if [ -n "$pub_key" ]; then
+    chroot_manager_args+=( --sshkey "$pub_key" )
+elif [ -n "$password" ]; then
+    chroot_manager_args+=( --password "$password" )
 fi
 
-add_sshkey=""
-if [ -n "$pub_key" ]
-then
-	ynh_app_setting_set $app pub_key $pub_key
-	auth_opt="--sshkey"
-	auth_value="$pub_key"
-fi
+if ! IS_PACKAGE_CHECK; then
+    "$install_dir/chroot_manager.sh" adduser --name "$ssh_user" "${chroot_manager_args[@]}" --directory "$user_dir" --quota "$size"
 
-if ! IS_PACKAGE_CHECK
-then
-	$final_path/chroot_manager.sh adduser --name $ssh_user $auth_opt "$auth_value" --directory "$user_dir" --quota $size
-
-	# Allow the user to use ssh
-	adduser $ssh_user ssh.app
+    # Allow the user to use ssh
+    adduser "$ssh_user" ssh.app
 fi
 
 #=================================================
 # ADD A LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf "$install_dir/chroot_manager.sh" /home/yunohost.app/ssh_chroot_directories/chroot_manager
 
 #=================================================
 # GENERIC FINALIZATION
@@ -152,7 +110,7 @@ ln -sf $final_path/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/c
 #=================================================
 
 # Set permissions to app files
-chown -R root: $final_path
+chown -R root: "$install_dir"
 
 #=================================================
 # DISCLAIMER
@@ -167,7 +125,7 @@ To use this directory, connect to 'ssh $ssh_user@$domain -p $ssh_port' via a ter
 
 if grep --quiet "^AllowUsers" /etc/ssh/sshd_config
 then
-	ynh_print_warn "
+    ynh_print_warn "
 Be carreful, your ssh configuration contains an AllowUsers option. You should probably add the user $ssh_user to this line."
 fi
 
