@@ -16,12 +16,12 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 
 ## Vue d’ensemble
 
-This app create a directory for an user, to allow him to put in here his backups (or whatever he want).  
-This directory is accessible by ssh or sftp.  
-The directory is highly secured by a complete chroot with limited commands available. So the user can't go out of his directory and can't use any other command which not allowed.  
-In addition to the chroot, the user has a limited space available.
+This app provides a directory, accessible via ssh of sftp, to a new user.
 
-So, you can provide to a distant user a limited part of your hard disk to let him put his backup, without any risk for your own server.
+A "chroot jail" limits the commands the user can use, so you can rest assured that
+they can't access your server's contents outside of the provided directory.
+
+A data size quota is also set on the directory.
 
 
 **Version incluse :** 1.3~ynh2
