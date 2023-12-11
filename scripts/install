@@ -37,21 +37,10 @@ ynh_script_progression --message="Setting up source files..." --weight=1
 
 ynh_setup_source --dest_dir="$install_dir"
 
+mkdir -p "$data_dir/$ssh_user"
+
 #=================================================
 # SPECIFIC SETUP
-#=================================================
-# SOURCE LIBRARIES
-#=================================================
-
-# Load functions quotas_xxx
-source "$install_dir/unix_quotas/unix_quotas.sh"
-
-#=================================================
-# CREATE DIRECTORY FOR THIS USER
-#=================================================
-
-mkdir "$data_dir/$ssh_user"
-
 #=================================================
 # INSTALL QUOTAS SYSTEM
 #=================================================
@@ -59,7 +48,10 @@ ynh_script_progression --message="Install quotas system" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
-    quotas_install
+    (
+        source "$install_dir/unix_quotas/unix_quotas.sh"
+        quotas_install
+    )
 fi
 
 #=================================================
@@ -70,11 +62,15 @@ ynh_script_progression --message="Configure fstab to support quotas" --weight=3
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
 if ! IS_PACKAGE_CHECK; then
-    quotas_find_mount_point "$user_dir"
-    quotas_set_fstab "$quotas_mount_point"
+    (
+        source "$install_dir/unix_quotas/unix_quotas.sh"
 
-    # Activate quotas
-    quotas_activate "$quotas_mount_point"
+        quotas_find_mount_point "$user_dir"
+        quotas_set_fstab "$quotas_mount_point"
+
+        # Activate quotas
+        quotas_activate "$quotas_mount_point"
+    )
 fi
 
 #=================================================
@@ -101,7 +97,7 @@ fi
 # ADD A LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -sf "$install_dir/chroot_manager.sh" /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf "$install_dir/chroot_manager.sh" "$data_dir/chroot_manager"
 
 #=================================================
 # GENERIC FINALIZATION

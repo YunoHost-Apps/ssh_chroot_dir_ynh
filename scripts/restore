@@ -24,17 +24,10 @@ ynh_restore_file --origin_path="$install_dir"
 #=================================================
 ynh_script_progression --message="Restoring the data directory..." --weight=1
 
-ynh_restore_file --origin_path="/home/yunohost.app/ssh_chroot_directories/$ssh_user" --not_mandatory
+ynh_restore_file --origin_path="$data_dir/$ssh_user" --not_mandatory
 
 #=================================================
 # SPECIFIC RESTORATION
-#=================================================
-# SOURCE LIBRARIES
-#=================================================
-
-# Load functions ssh_chroot_xxx
-source "$install_dir/ssh_chroot/ssh_chroot.sh"
-
 #=================================================
 # INSTALL QUOTAS SYSTEM
 #=================================================
@@ -42,7 +35,11 @@ ynh_script_progression --message="Install quotas system" --weight=3
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
-    quotas_install
+    (
+        source "$install_dir/unix_quotas/unix_quotas.sh"
+
+        quotas_install
+    )
 fi
 
 #=================================================
@@ -53,11 +50,15 @@ ynh_script_progression --message="Configure fstab to support quotas" --weight=3
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
 if ! IS_PACKAGE_CHECK; then
-    quotas_find_mount_point "$user_dir"
-    quotas_set_fstab "$quotas_mount_point"
+    (
+        source "$install_dir/unix_quotas/unix_quotas.sh"
 
-    # Activate quotas
-    quotas_activate "$quotas_mount_point"
+        quotas_find_mount_point "$user_dir"
+        quotas_set_fstab "$quotas_mount_point"
+
+        # Activate quotas
+        quotas_activate "$quotas_mount_point"
+    )
 fi
 
 #=================================================
@@ -65,29 +66,31 @@ fi
 #=================================================
 ynh_script_progression --message="Update the chroot directory" --weight=3
 
-user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
-
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/ssh_chroot/ssh_chroot.sh
 # Build the chroot
-ssh_chroot_set_directory "$user_dir"
-
-# Copy some binaries in the chroot
-ssh_chroot_standard_binaries "$user_dir"
-ssh_chroot_copy_binary rsync "$user_dir"
 
 # Set permissions
 if ! IS_PACKAGE_CHECK; then
-    ssh_chroot_set_permissions "$user_dir" $ssh_user
+    (
+        source "$install_dir/ssh_chroot/ssh_chroot.sh"
 
-    # Allow the user to use ssh
-    adduser $ssh_user ssh.app
+        ssh_chroot_set_directory "$user_dir"
+
+        # Copy some binaries in the chroot
+        ssh_chroot_standard_binaries "$user_dir"
+        ssh_chroot_copy_binary rsync "$user_dir"
+        ssh_chroot_set_permissions "$user_dir" $ssh_user
+
+        # Allow the user to use ssh
+        adduser $ssh_user ssh.app
+    )
 fi
 
 #=================================================
 # UPDATE THE LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -sf $install_dir/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf "$install_dir/chroot_manager.sh" "$data_dir/chroot_manager"
 
 #=================================================
 # SECURE FILES AND DIRECTORIES

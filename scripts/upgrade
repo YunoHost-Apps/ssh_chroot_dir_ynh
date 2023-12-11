@@ -44,8 +44,6 @@ source "$install_dir/ssh_chroot/ssh_chroot.sh"
 #=================================================
 ynh_script_progression --message="Update the chroot directory" --weight=3
 
-user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
-
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/ssh_chroot/ssh_chroot.sh
 # Build the chroot
 ssh_chroot_set_directory "$user_dir"
@@ -67,7 +65,7 @@ fi
 # UPDATE THE LINK TO CHROOT_MANAGER
 #=================================================
 
-ln -sf $install_dir/chroot_manager.sh /home/yunohost.app/ssh_chroot_directories/chroot_manager
+ln -sf $install_dir/chroot_manager.sh "$data_dir/chroot_manager"
 
 # Set permissions to app files
 chown -R root: $install_dir
