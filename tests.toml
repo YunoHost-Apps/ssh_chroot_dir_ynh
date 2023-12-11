@@ -6,4 +6,5 @@ test_format = 1.0
 
     args.ssh_user = "testuser"
     args.password = "password"
+    args.pub_key = ""
     args.size = "500M"
