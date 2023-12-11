@@ -69,5 +69,6 @@ ram.runtime = "0M"
     [resources.install_dir]
 
     [resources.data_dir]
+    dir = "/home/yunohost.app/ssh_chroot_directories"
 
     [resources.permissions]
