@@ -72,3 +72,6 @@ ram.runtime = "0M"
     dir = "/home/yunohost.app/ssh_chroot_directories"
 
     [resources.permissions]
+
+    [resources.apt]
+    packages = ["rsync"]
