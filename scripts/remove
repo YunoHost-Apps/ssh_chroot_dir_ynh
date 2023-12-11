@@ -12,26 +12,21 @@ source /usr/share/yunohost/helpers
 #=================================================
 # SPECIFIC REMOVE
 #=================================================
-# SOURCE LIBRARIES
-#=================================================
-
-# Load functions quotas_xxx
-source "$install_dir/unix_quotas/unix_quotas.sh"
-
-#=================================================
 # REMOVE QUOTAS OPTIONS IN FSTAB
 #=================================================
 ynh_script_progression --message="Remove quotas options in fstab" --weight=3
 
-user_dir="/home/yunohost.app/ssh_chroot_directories/$ssh_user"
-
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
-    quotas_find_mount_point "$user_dir"
-    quotas_clean_fstab "$quotas_mount_point"
+    (
+        source "$install_dir/unix_quotas/unix_quotas.sh"
 
-    # Deactivate quotas
-    quotas_deactivate "$quotas_mount_point"
+        quotas_find_mount_point "$user_dir"
+        quotas_clean_fstab "$quotas_mount_point"
+
+        # Deactivate quotas
+        quotas_deactivate "$quotas_mount_point"
+    )
 fi
 
 #=================================================
@@ -40,7 +35,7 @@ fi
 ynh_script_progression --message="Remove the user with Chroot_manager" --weight=3
 
 if ! IS_PACKAGE_CHECK; then
-    "$install_dir/chroot_manager.sh" deluser --name $ssh_user
+    "$install_dir/chroot_manager.sh" deluser --name "$ssh_user"
 fi
 
 #=================================================
@@ -49,7 +44,7 @@ fi
 # DISCLAIMER
 #=================================================
 
-ynh_print_info --message="The directory /home/yunohost.app/ssh_chroot_directories hasn't been removed."
+ynh_print_info --message="The directory $data_dir hasn't been removed."
 
 #=================================================
 # END OF SCRIPT
