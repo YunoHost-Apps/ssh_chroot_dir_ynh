@@ -1,0 +1,9 @@
+#:schema file:///home/felix/tmp/Yunohost/apps/example_ynh/schema.json
+
+test_format = 1.0
+
+[default]
+
+    args.ssh_user = "testuser"
+    args.password = "password"
+    args.size = "500M"
