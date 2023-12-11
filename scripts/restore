@@ -99,10 +99,15 @@ ln -sf "$install_dir/chroot_manager.sh" "$data_dir/chroot_manager"
 # Set permissions to app files
 chown -R root: $install_dir
 
+
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # END OF SCRIPT
 #=================================================
+
+# Not really settings, but required for POST_INSTALL.md
+ynh_app_setting_set --app="$app" --key="domain" --value="$(yunohost domain list --json | jq -r '.["main"]')"
+ynh_app_setting_set --app="$app" --key="ssh_port" --value="$(grep "^Port " /etc/ssh/sshd_config | awk '{print $2}')"
 
 ynh_script_progression --message="Restoration completed for $app" --last
