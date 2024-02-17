@@ -7,7 +7,7 @@ name = "ssh chroot directory"
 description.en = "SSH chroot directories with quotas disk"
 description.fr = "Dossier SSH en chroot avec gestion de quotas"
 
-version = "1.3~ynh2"
+version = "v1.3~ynh1"
 
 maintainers = []
 
@@ -59,7 +59,7 @@ ram.runtime = "0M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/maniackcrudelis/ssh_chroot/archive/v1.3.tar.gz"
+    url = "https://github.com/maniackcrudelis/ssh_chroot/archive/refs/tags/v1.3.tar.gz"
     sha256 = "d44b51f8d838fc9f929e6048b825c8f74d52f6a254764527bce1ed4a4c558652"
     autoupdate.strategy = "latest_github_release"
 
