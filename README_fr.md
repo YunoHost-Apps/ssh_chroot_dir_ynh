@@ -24,7 +24,7 @@ they can't access your server's contents outside of the provided directory.
 A data size quota is also set on the directory.
 
 
-**Version incluse :** 1.3~ynh2
+**Version incluse :** 1.3~ynh3
 ## Documentations et ressources
 
 - Dépôt de code officiel de l’app : <https://github.com/maniackcrudelis/ssh_chroot>
