@@ -62,7 +62,6 @@ ram.runtime = "0M"
     url = "https://github.com/maniackcrudelis/ssh_chroot/archive/v1.3.tar.gz"
     sha256 = "d44b51f8d838fc9f929e6048b825c8f74d52f6a254764527bce1ed4a4c558652"
     autoupdate.strategy = "latest_github_release"
-    autoupdate.asset = "*.tar.gz"
 
     [resources.system_user]
 
