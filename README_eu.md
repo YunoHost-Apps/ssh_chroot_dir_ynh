@@ -25,6 +25,10 @@ A data size quota is also set on the directory.
 
 
 **Paketatutako bertsioa:** 1.3~ynh3
+## :red_circle: Ezaugarri zalantzagarriak
+
+- **Jatorrizko garapena utzita**: Software honek ez du arduradunik. Denborak aurrera egin ahala funtzionatzeari utziko dio, konpondu gabeko segurtasun arazoak izango ditu, etab.
+
 ## Dokumentazioa eta baliabideak
 
 - Jatorrizko aplikazioaren kode-gordailua: <https://github.com/maniackcrudelis/ssh_chroot>

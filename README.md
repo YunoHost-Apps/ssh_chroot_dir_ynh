@@ -25,6 +25,10 @@ A data size quota is also set on the directory.
 
 
 **Shipped version:** 1.3~ynh3
+## :red_circle: Antifeatures
+
+- **Upstream not maintained**: This software is not maintained anymore. Expect it to break down over time, be exposed to unfixed security breaches, etc.
+
 ## Documentation and resources
 
 - Upstream app code repository: <https://github.com/maniackcrudelis/ssh_chroot>
