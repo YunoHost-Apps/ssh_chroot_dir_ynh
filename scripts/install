@@ -1,24 +1,18 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..." --weight=2
+ynh_script_progression "Validating installation parameters..."
 
 # Correct user name
 # An unix user name can contains only :alnum: and . - _
 # Replace all other characters by _
 ssh_user=${ssh_user//[^[:alnum:].\-_]/_}
-ynh_app_setting_set --app="$app" --key=ssh_user --value="$ssh_user"
+ynh_app_setting_set --key=ssh_user --value="$ssh_user"
 
 if ynh_system_user_exists "$ssh_user"; then
     ynh_die "This user already exist!"
@@ -29,11 +23,9 @@ if test -z "$password" && test -z "$pub_key"; then
 fi
 
 #=================================================
-# STANDARD MODIFICATIONS
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=1
+ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
@@ -44,7 +36,7 @@ mkdir -p "$data_dir/$ssh_user"
 #=================================================
 # INSTALL QUOTAS SYSTEM
 #=================================================
-ynh_script_progression --message="Install quotas system" --weight=3
+ynh_script_progression "Install quotas system"
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
@@ -57,7 +49,7 @@ fi
 #=================================================
 # CONFIGURE FSTAB TO SUPPORT QUOTAS
 #=================================================
-ynh_script_progression --message="Configure fstab to support quotas" --weight=3
+ynh_script_progression "Configure fstab to support quotas"
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 # Set fstab
@@ -76,7 +68,7 @@ fi
 #=================================================
 # CREATE THE USER WITH CHROOT_MANAGER
 #=================================================
-ynh_script_progression --message="Create the user with Chroot_manager" --weight=5
+ynh_script_progression "Create the user with Chroot_manager"
 
 chroot_manager_args=()
 
@@ -100,14 +92,11 @@ fi
 ln -sf "$install_dir/chroot_manager.sh" "$data_dir/chroot_manager"
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions to app files
-chown -R root: "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R root: "$install_dir"
 #=================================================
 # DISCLAIMER
 #=================================================
@@ -122,7 +111,7 @@ fi
 #=================================================
 
 # Not really settings, but required for POST_INSTALL.md
-ynh_app_setting_set --app="$app" --key="domain" --value="$(yunohost domain list --json | jq -r '.["main"]')"
-ynh_app_setting_set --app="$app" --key="ssh_port" --value="$(grep "^Port " /etc/ssh/sshd_config | awk '{print $2}')"
+ynh_app_setting_set --key="domain" --value="$(yunohost domain list --json | jq -r '.["main"]')"
+ynh_app_setting_set --key="ssh_port" --value="$(grep "^Port " /etc/ssh/sshd_config | awk '{print $2}')"
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"

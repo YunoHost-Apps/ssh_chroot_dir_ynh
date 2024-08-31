@@ -1,37 +1,23 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# CHECK VERSION
-#=================================================
-ynh_script_progression --message="Checking version..." --weight=1
+ynh_script_progression "Checking version..."
 
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# STANDARD UPGRADE STEPS
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
+# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
+if ynh_app_upstream_version_changed
 then
-	ynh_script_progression --message="Upgrading source files..." --weight=1
+	ynh_script_progression "Upgrading source files..."
 
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$install_dir"
 fi
 
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # SOURCE LIBRARIES
 #=================================================
@@ -42,7 +28,7 @@ source "$install_dir/ssh_chroot/ssh_chroot.sh"
 #=================================================
 # UPDATE THE CHROOT DIRECTORY
 #=================================================
-ynh_script_progression --message="Update the chroot directory" --weight=3
+ynh_script_progression "Update the chroot directory"
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/ssh_chroot/ssh_chroot.sh
 # Build the chroot
@@ -68,19 +54,15 @@ fi
 ln -sf $install_dir/chroot_manager.sh "$data_dir/chroot_manager"
 
 # Set permissions to app files
-chown -R root: $install_dir
-
-#=================================================
-# GENERIC FINALIZATION
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R root: $install_dir
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions to app files
-chown -R root: $install_dir
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R root: $install_dir
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"
