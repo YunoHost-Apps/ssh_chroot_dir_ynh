@@ -25,6 +25,10 @@ A data size quota is also set on the directory.
 
 
 **Versión proporcionada:** 1.3~ynh3
+## :red_circle: Debes considerar
+
+- **Upstream not maintained**: This software is not maintained anymore. Expect it to break down over time, be exposed to unfixed security breaches, etc.
+
 ## Documentación e recursos
 
 - Repositorio de orixe do código: <https://github.com/maniackcrudelis/ssh_chroot>

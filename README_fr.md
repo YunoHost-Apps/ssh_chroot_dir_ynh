@@ -25,6 +25,10 @@ A data size quota is also set on the directory.
 
 
 **Version incluse :** 1.3~ynh3
+## :red_circle: Anti-fonctionnalités
+
+- **Application non maintenue **: Ce logiciel n'est plus maintenu. Attendez-vous à ce qu'il ne fonctionne plus avec le temps, et que l'on découvre des failles de sécurité qui ne seront pas corrigées, etc.
+
 ## Documentations et ressources
 
 - Dépôt de code officiel de l’app : <https://github.com/maniackcrudelis/ssh_chroot>

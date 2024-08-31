@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 ssh chroot directory
+# YunoHost 上的 ssh chroot directory
 
 [![集成程度](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![工作状态](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
 
@@ -25,6 +25,10 @@ A data size quota is also set on the directory.
 
 
 **分发版本：** 1.3~ynh3
+## :red_circle: 负面特征
+
+- **Upstream not maintained**: This software is not maintained anymore. Expect it to break down over time, be exposed to unfixed security breaches, etc.
+
 ## 文档与资源
 
 - 上游应用代码库： <https://github.com/maniackcrudelis/ssh_chroot>
