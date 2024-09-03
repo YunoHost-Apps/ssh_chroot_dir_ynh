@@ -5,7 +5,7 @@
 
 # YunoHost 上的 ssh chroot directory
 
-[![集成程度](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![工作状态](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
+[![集成程度](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
 
 [![使用 YunoHost 安装 ssh chroot directory](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ssh_chroot_dir)
 

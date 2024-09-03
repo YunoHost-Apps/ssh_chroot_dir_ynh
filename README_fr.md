@@ -5,7 +5,7 @@ Il NE doit PAS être modifié à la main.
 
 # ssh chroot directory pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
+[![Niveau d’intégration](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
 
 [![Installer ssh chroot directory avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ssh_chroot_dir)
 

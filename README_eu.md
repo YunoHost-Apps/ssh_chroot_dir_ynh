@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # ssh chroot directory YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://dash.yunohost.org/appci/app/ssh_chroot_dir) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/ssh_chroot_dir.svg)](https://ci-apps.yunohost.org/ci/apps/ssh_chroot_dir/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/ssh_chroot_dir.maintain.svg)
 
 [![Instalatu ssh chroot directory YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ssh_chroot_dir)
 
