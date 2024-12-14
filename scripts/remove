@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -14,7 +8,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # REMOVE QUOTAS OPTIONS IN FSTAB
 #=================================================
-ynh_script_progression --message="Remove quotas options in fstab" --weight=3
+ynh_script_progression "Remove quotas options in fstab"
 
 # https://github.com/maniackcrudelis/ssh_chroot/blob/master/unix_quotas/unix_quotas.sh
 if ! IS_PACKAGE_CHECK; then
@@ -32,22 +26,20 @@ fi
 #=================================================
 # REMOVE THE USER WITH CHROOT_MANAGER
 #=================================================
-ynh_script_progression --message="Remove the user with Chroot_manager" --weight=3
+ynh_script_progression "Remove the user with Chroot_manager"
 
 if ! IS_PACKAGE_CHECK; then
     "$install_dir/chroot_manager.sh" deluser --name "$ssh_user"
 fi
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
 # DISCLAIMER
 #=================================================
 
-ynh_print_info --message="The directory $data_dir hasn't been removed."
+ynh_print_info "The directory $data_dir hasn't been removed."
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Removal of $app completed" --last
+ynh_script_progression "Removal of $app completed"
